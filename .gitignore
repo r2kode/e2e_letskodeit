@@ -88,3 +88,4 @@ screenshots/
 .pytest_cache/
 __pycache__/
 geckodriver.log
+*.log

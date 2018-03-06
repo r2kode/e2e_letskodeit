@@ -1,8 +1,12 @@
 from selenium.webdriver.common.by import By
 from base.selenium_driver import SeleniumDriver
+import logging
+import utilities.custom_logger as cl
 
 
 class LoginPage(SeleniumDriver):
+
+    log = cl.customLogger(logging.DEBUG)
 
     def __init__(self, driver):
         super().__init__(driver)
@@ -38,9 +42,14 @@ class LoginPage(SeleniumDriver):
     def clickLoginButton(self):
         self.elementClick(self._login_button, "name")
 
-    def login(self, email, password):
+    def login(self, email="", password=""):
         self.clickLoginLink()
         self.enterEmail(email)
         self.enterPassword(password)
         self.clickLoginButton()
 
+    def verifyLoginSuccessful(self):
+        return self.isElementPresent("//div[@id='navbar']//span[text()='User Settings']", "xpath")
+
+    def verifyLoginFailed(self):
+        return self.isElementPresent("//div[contains(text(), 'Invalid email or password')]", "xpath")

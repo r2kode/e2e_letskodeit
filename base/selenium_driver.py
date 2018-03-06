@@ -3,9 +3,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import *
 from traceback import print_stack
+import utilities.custom_logger as cl
+import logging
 
 
 class SeleniumDriver():
+
+    log = cl.customLogger(logging.DEBUG)
 
     def __init__(self, driver):
         self.driver = driver
@@ -25,7 +29,7 @@ class SeleniumDriver():
         elif locator_type == "link":
             return By.LINK_TEXT
         else:
-            print("locator type not supported")
+            self.log.info("{} type not supported".format(locator_type))
             return False
 
     def getElement(self, locator, locatorType="id"):
@@ -35,24 +39,24 @@ class SeleniumDriver():
             by_type = self.getByType(locatorType)
             element = self.driver.find_element(by_type, locator)
         except:
-            print("Unable to locate element: [{}] :: {} ".format(locatorType, locator))
+            self.log.info("Unable to locate element: [{}] :: {} ".format(locatorType, locator))
         return element
 
     def elementClick(self, locator, locatorType="id"):
         try:
             element = self.getElement(locator, locatorType)
             element.click()
-            print("Clicked on element: [{}] :: {} ".format(locatorType, locator))
+            self.log.info("Clicked on element: [{}] :: {} ".format(locatorType, locator))
         except:
-            print("Unable to click element: [{}] :: {} ".format(locatorType, locator))
+            self.log.info("Unable to click element: [{}] :: {} ".format(locatorType, locator))
             print_stack()
 
     def sendKeys(self, data, locator, locatorType):
         try:
             self.getElement(locator, locatorType).send_keys(data)
-            print("Send data to element: [{}] :: {} ".format(locatorType, locator))
+            self.log.info("Send data to element: [{}] :: {} ".format(locatorType, locator))
         except:
-            print("Unable to send data to element: [{}] :: {} ".format(locatorType, locator))
+            self.log.info("Unable to send data to element: [{}] :: {} ".format(locatorType, locator))
             print_stack()
 
     def isElementPresent(self, locator, locatorType="id"):
@@ -64,7 +68,7 @@ class SeleniumDriver():
             else:
                 return False
         except:
-            print("Element not found")
+            self.log.info("Element not found")
             return False
 
     def elementPresenceCheck(self, locator, byType):
@@ -82,7 +86,7 @@ class SeleniumDriver():
         element = None
         try:
             byType = self.getByType(locatorType)
-            print("waiting for maximum {} seconds for element to be clickabel".format(timeout))
+            self.log.info("waiting for maximum {} seconds for element to be clickabel".format(timeout))
             wait = WebDriverWait(self.driver, 10, poll_frequency=1,
                                  ignored_exceptions=[
                                      NoSuchElementException,
@@ -90,8 +94,8 @@ class SeleniumDriver():
                                      ElementNotSelectableException
                                  ])
             element = wait.until(EC.element_to_be_clickable((byType, locator)))
-            print("Element become clickable")
+            self.log.info("Element become clickable")
         except:
-            print("Element not appered on page")
+            self.log.info("Element not appered on page")
             print_stack()
         return element
