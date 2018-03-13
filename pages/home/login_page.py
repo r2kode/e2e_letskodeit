@@ -53,3 +53,9 @@ class LoginPage(SeleniumDriver):
 
     def verifyLoginFailed(self):
         return self.isElementPresent("//div[contains(text(), 'Invalid email or password')]", "xpath")
+
+    def verifyTitle(self):
+        if "Let's Kode Itmmmm" in self.getTitle():
+            return True
+        else:
+            return False

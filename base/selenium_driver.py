@@ -5,6 +5,8 @@ from selenium.common.exceptions import *
 from traceback import print_stack
 import utilities.custom_logger as cl
 import logging
+import time
+import os
 
 
 class SeleniumDriver():
@@ -13,6 +15,26 @@ class SeleniumDriver():
 
     def __init__(self, driver):
         self.driver = driver
+
+    def screenShot(self, resultMessage):
+        fileName = "{}_{}.png".format(resultMessage, str(round(time.time() * 1000)))
+        screenshotDirectory = "../screenshots/"
+        relativeFileName = screenshotDirectory + fileName
+        currentDirectory = os.path.dirname(__file__)
+        destinationFile = os.path.join(currentDirectory, relativeFileName)
+        destinationDirectory = os.path.join(currentDirectory, screenshotDirectory)
+
+        try:
+            if not os.path.exists(destinationDirectory):
+                os.makedirs(destinationDirectory)
+            self.driver.save_screenshot(destinationFile)
+            self.log.info("Screenshot saved: {}".format(destinationFile))
+        except:
+            self.log.error("Unable to save screenshot")
+            print_stack()
+
+    def getTitle(self):
+        return self.driver.title
 
     def getByType(self, locator_type):
         locator_type = locator_type.lower()

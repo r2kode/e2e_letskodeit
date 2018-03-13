@@ -24,13 +24,16 @@ def oneTimeSetUp(request, browser):
     driver.quit()
     print("One time tearDown")
 
+
 def pytest_addoption(parser):
     parser.addoption("--browser")
     parser.addoption("--osType", help="Type of operatin system")
 
+
 @pytest.fixture(scope="session")
 def browser(request):
     return request.config.getoption("--browser")
+
 
 @pytest.fixture(scope="session")
 def osType(request):
