@@ -90,11 +90,11 @@ class SeleniumDriver():
     def sendKeys(self, data, locator="", locatorType="id", element=None):
         try:
             if locator:
-                element = self.driver.getElement(locator, locatorType)
+                element = self.getElement(locator, locatorType)
             element.send_keys(data)
-            self.log.info("Send data to element: [{}] :: {} ".format(locatorType, locator))
+            self.log.info("Send data '{}' to element: {}={} ".format(data, locatorType, locator))
         except:
-            self.log.info("Unable to send data to element: [{}] :: {} ".format(locatorType, locator))
+            self.log.info("Unable to send data to element: {}={} ".format(locatorType, locator))
             print_stack()
 
     def getText(self, locator="", locatorType="id", element=None, info=""):

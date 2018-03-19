@@ -1,6 +1,7 @@
 from base.basepage import BasePage
 import logging
 import utilities.custom_logger as cl
+import time
 
 
 class LoginPage(BasePage):
@@ -43,6 +44,7 @@ class LoginPage(BasePage):
 
     def login(self, email="", password=""):
         self.clickLoginLink()
+        time.sleep(3)
         self.enterEmail(email)
         self.enterPassword(password)
         self.clickLoginButton()
