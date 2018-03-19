@@ -63,6 +63,7 @@ class RegisterCoursesPage(BasePage):
     def submitCouponCode(self, couponCode):
         self.clickAddCouponCodeBtn()
         self.enterCouponCode(couponCode)
+        time.sleep(2)
         self.applyCouponCode()
 
     def enterCreditCardInformation(self, num, exp, cvv):
