@@ -64,31 +64,84 @@ class SeleniumDriver():
             self.log.info("Unable to locate element: [{}] :: {} ".format(locatorType, locator))
         return element
 
-    def elementClick(self, locator, locatorType="id"):
+    def getElementList(self, locator, locatorType="id"):
+
+        element = None
         try:
-            element = self.getElement(locator, locatorType)
+            locatorType = locatorType.lower()
+            byType = self.getByType(locatorType)
+            element = self.driver.find_elements(byType, locator)
+            self.log.info("Found element list with {} of {}".format(locatorType, locator))
+        except:
+            self.log.info("Not found elements list with {} of {}".format(locatorType, locator))
+
+        return locator
+
+    def elementClick(self, locator="", locatorType="id", element=None):
+        try:
+            if locator:
+                element = self.getElement(locator, locatorType)
             element.click()
             self.log.info("Clicked on element: [{}] :: {} ".format(locatorType, locator))
         except:
             self.log.info("Unable to click element: [{}] :: {} ".format(locatorType, locator))
             print_stack()
 
-    def sendKeys(self, data, locator, locatorType):
+    def sendKeys(self, data, locator="", locatorType="id", element=None):
         try:
-            self.getElement(locator, locatorType).send_keys(data)
+            if locator:
+                element = self.driver.getElement(locator, locatorType)
+            element.send_keys(data)
             self.log.info("Send data to element: [{}] :: {} ".format(locatorType, locator))
         except:
             self.log.info("Unable to send data to element: [{}] :: {} ".format(locatorType, locator))
             print_stack()
 
-    def isElementPresent(self, locator, locatorType="id"):
-        element = None
+    def getText(self, locator="", locatorType="id", element=None, info=""):
         try:
-            element = self.getElement(locator, locatorType)
+            if locator:
+                self.log.debug("in locator condition")
+                element = self.getElement(locator, locatorType)
+            self.log.debug("Before getting text")
+            text = element.text
+            self.log.debug("After getting text of size: {}".format(len(text)))
+            if len(text) == 0:
+                text = element.get_attribute("innerText");
+            if len(text) != 0:
+                self.log.info("Getting text on element {}".format(info))
+                self.log.info("Text is: {}".format(text))
+                text = text.strip()
+        except:
+            self.log.error("Failed to get text on element {}".format(info))
+            print_stack()
+            text = None
+        return text
+
+    def isElementPresent(self, locator="", locatorType="id", element=None):
+
+        try:
+            if locator:
+                element = self.getElement(locator, locatorType)
             if element is not None:
+                self.log.info("Element present [{}] :: {}".format(locatorType, locator))
                 return True
             else:
+                self.log.info("Element not present [{}] :: {}".format(locatorType, locator))
                 return False
+        except:
+            self.log.info("Element not found")
+            return False
+
+    def isElementDisplayed(self, locator="", locatorType="id", element=None):
+        try:
+            if locator:
+                element = self.getElement(locator, locatorType)
+            if element is not None:
+                isDisplayed = element.is_displayed()
+                self.log.info("Element displayed [{}] :: {}".format(locatorType, locator))
+            else:
+                self.log.info("Element not displayed [{}] :: {}".format(locatorType, locator))
+            return isDisplayed
         except:
             self.log.info("Element not found")
             return False
@@ -121,3 +174,9 @@ class SeleniumDriver():
             self.log.info("Element not appered on page")
             print_stack()
         return element
+
+    def webscroll(self, direction="up"):
+        if direction == "up":
+            self.driver.execute_script("window.scrollBy(0, -1000);")
+        if direction == "down":
+            self.driver.execute_script("window.scrollBy(0, 1000);")
