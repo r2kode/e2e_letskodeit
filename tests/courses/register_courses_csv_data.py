@@ -1,4 +1,5 @@
 from pages.courses.register_courses_page import RegisterCoursesPage
+from pages.home.navigation_page import NavigationPage
 from utilities.teststatus import TestStatus
 from utilities.read_data import getCSVData
 import unittest
@@ -14,12 +15,14 @@ class RegisterCoursesCSVDataTest(unittest.TestCase):
     def objectSetup(self, oneTimeSetUp):
         self.courses = RegisterCoursesPage(self.driver)
         self.ts = TestStatus(self.driver)
+        self.nav = NavigationPage(self.driver)
 
     def setUp(self):
-        self.driver.get("https://letskodeit.teachable.com/courses")
+        self.nav.navigateToHomepage()
+        self.nav.navigateToAllCourses()
 
     @pytest.mark.run(order=1)
-    @data(*getCSVData("~/selenium/e2e_letskodeit/testdata.csv"))
+    @data(*getCSVData("/home/artur/selenium/e2e_letskodeit/testdata.csv"))
     @unpack
     def test_invalidCouponCode(self, courseName, couponCode):
         # self.courses.showAllCourses()
