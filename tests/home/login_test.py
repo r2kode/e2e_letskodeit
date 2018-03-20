@@ -23,7 +23,7 @@ class LoginTest(unittest.TestCase):
 
     @pytest.mark.run(order=1)
     def test_invalidLogin(self):
-
+        self.lp.logout()
         self.lp.login("someone@somedomain.com", "somePassword")
         isLoginInvalid = self.lp.verifyLoginFailed()
         assert isLoginInvalid == True

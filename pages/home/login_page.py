@@ -1,4 +1,5 @@
 from base.basepage import BasePage
+from pages.home.navigation_page import NavigationPage
 import logging
 import utilities.custom_logger as cl
 import time
@@ -11,6 +12,7 @@ class LoginPage(BasePage):
     def __init__(self, driver):
         super().__init__(driver)
         self.driver = driver
+        self.nav = NavigationPage(driver)
 
     # Locators
     _login_link = "Login"
@@ -50,11 +52,16 @@ class LoginPage(BasePage):
         self.clickLoginButton()
 
     def verifyLoginSuccessful(self):
-        return self.isElementPresent("//div[@id='navbar']//span[text()='User Settings']", "xpath")
+        return self.isElementPresent("//div[@id='navbar']//li[@class='dropdown']/a", "xpath")
 
     def verifyLoginFailed(self):
         return self.isElementPresent("//div[contains(text(), 'Invalid email or password')]", "xpath")
 
     def verifyLoginTitle(self):
-        return self.verifyPageTitle("myt")
+        return self.verifyPageTitle("Let's Kode It")
+
+    def logout(self):
+        self.nav.navigateToUserSettingsIcon()
+        logoutLink = self.waitForElement("//div[@id='navbar']//a[@href='/sign_out']", "xpath", pollFrequency=1)
+        self.elementClick(element=logoutLink)
 

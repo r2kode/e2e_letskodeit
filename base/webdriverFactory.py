@@ -23,7 +23,7 @@ class WebDriverFactory():
             driver = webdriver.Ie()
         elif self.browser == "firefox":
             driver = webdriver.Firefox()
-        elif self.browser == "chorme":
+        elif self.browser == "chrome":
             driver = webdriver.Chrome()
         else:
             driver = webdriver.Firefox()

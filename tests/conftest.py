@@ -29,7 +29,7 @@ def oneTimeSetUp(request, browser):
 
 def pytest_addoption(parser):
     parser.addoption("--browser")
-    parser.addoption("--osType", help="Type of operatin system")
+    parser.addoption("--osType", help="Type of operating system")
 
 
 @pytest.fixture(scope="session")
